@@ -1,11 +1,11 @@
-import { start, exportData, play } from './spy.js';
+import { tick, data, play } from './spy.js';
 
 var pos
 var preData
-start();
+tick();
 document.querySelector('#play').addEventListener('click', function(e) {
-  var data = exportData()
-  play(document.querySelector('#cursor'), data)
+  var d = data()
+  play(document.querySelector('#cursor'), d)
 })
 document.getElementById('test').addEventListener('click', function() {
   console.log('success')
