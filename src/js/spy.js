@@ -1,43 +1,41 @@
-var Spy = function() {
-  this.isRecording = false;
-  this.rAF = undefined;
-  this.intelligenceBox = [];
-  this.bindListeners();
-};
 
-Spy.prototype.start = function() {
-  this.isRecording = true;
-  this.rAF = window.requestAnimationFrame(this.moment.bind(this));
-  return this;
-};
+var isRecording = false
+var rAF = undefined
+var intelligenceBox = []
+bindListeners()
 
-Spy.prototype.moment = function(ts) {
-  this.isRecording = true;
+function start() {
+  isRecording = true
+  rAF = window.requestAnimationFrame(moment.bind(this))
+}
 
-  this.rAF = window.requestAnimationFrame(this.moment.bind(this));
-};
+function moment(ts) {
+  isRecording = true
 
-Spy.prototype.bindListeners = function() {
+  rAF = window.requestAnimationFrame(moment.bind(this))
+}
+
+function bindListeners() {
   window.addEventListener('mousemove', e => {
-    if (!this.isRecording)
-      return;
-    this.intelligenceBox.push(this.createIntel(e, 'mousemove'));
-  }, true);
+    if (!isRecording)
+      return
+    intelligenceBox.push(createIntel(e, 'mousemove'))
+  }, true)
   window.addEventListener('click', e => {
-    console.log(e);
-    if (!this.isRecording)
-      return;
-    this.intelligenceBox.push(this.createIntel(e, 'click'));
-  }, true);
+    console.log(e)
+    if (!isRecording)
+      return
+    intelligenceBox.push(createIntel(e, 'click'))
+  }, true)
   window.addEventListener('scroll', e => {
-    if (!this.isRecording)
-      return;
-    this.intelligenceBox.push(this.createIntel(e, 'scroll'));
-  }, true);
+    if (!isRecording)
+      return
+    intelligenceBox.push(createIntel(e, 'scroll'))
+  }, true)
   // window.addEventListener('beforeunload', e => {
-  //   this.saveToLocalStorage(this.export());
+  //   saveToLocalStorage(export());
   // });
-};
+}
 
 // Spy.prototype.saveToLocalStorage = function(data) {
 //   var info = {
@@ -47,44 +45,42 @@ Spy.prototype.bindListeners = function() {
 //   localStorage.setItem('spy-data', data);
 // };
 
-Spy.prototype.createIntel = function(event, behavior) {
+function createIntel(event, behavior) {
   var intelligence = {
     x: event.pageX || null,
     y: event.pageY || null,
     scrollX: window.scrollX,
     scrollY: window.scrollY,
-    target: event.target.getAttribute? event.target.getAttribute('id') : null,
+    target: event.target.getAttribute ? event.target.getAttribute('id') : null,
     behavior: behavior,
     ts: Date.now()
-  };
-  return intelligence;
-};
+  }
+  return intelligence
+}
 
-Spy.prototype.export = function() {
-  return this.intelligenceBox;
-};
+function exportData() {
+  return intelligenceBox
+}
 
-Spy.prototype.play = function(cursor, box) {
-  let start = box[0].ts;
+function play(cursor, box) {
+  let start = box[0].ts
   box.forEach(intelligence => {
     setTimeout(() => {
 
       if (intelligence.behavior === 'scroll') {
-        window.scroll(intelligence.scrollX, intelligence.scrollY);
+        window.scroll(intelligence.scrollX, intelligence.scrollY)
       } else if (intelligence.behavior === 'mousemove') {
-        cursor.style.left = intelligence.x + 'px';
-        cursor.style.top = intelligence.y + 'px';
+        cursor.style.left = intelligence.x + 'px'
+        cursor.style.top = intelligence.y + 'px'
       } else if (intelligence.behavior === 'click') {
         if (intelligence.target) {
-          var evObj = document.createEvent('Events');
-          evObj.initEvent('click', true, false);
-          document.getElementById(intelligence.target).dispatchEvent(evObj);
+          var evObj = document.createEvent('Events')
+          evObj.initEvent('click', true, false)
+          document.getElementById(intelligence.target).dispatchEvent(evObj)
         }
       }
-    }, intelligence.ts - start);
-  })
-};
-
-export default function() {
-  return new Spy().start();
+    }, intelligence.ts - start)
+  });
 }
+
+export { start, exportData, play }
