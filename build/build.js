@@ -5,35 +5,27 @@ var frame = undefined;
 var box = [];
 bindListeners();
 
-function tick() {
-
-  isRecording || bindListeners();
-  isRecording = true;
-  frame = window.requestAnimationFrame(tick);
-}
-
 // TODO: debounce
 function bindListeners() {
   window.addEventListener('mousemove', function (e) {
-    console.log(e);
-    box.push(createIntel(e, 'mousemove'));
+    return box.push(createIntel(window, e, 'mousemove'));
   }, true);
   window.addEventListener('click', function (e) {
-    box.push(createIntel(e, 'click'));
+    return box.push(createIntel(window, e, 'click'));
   }, true);
   window.addEventListener('scroll', function (e) {
-    box.push(createIntel(e, 'scroll'));
+    return box.push(createIntel(window, e, 'scroll'));
   }, true);
 }
 
-function createIntel(event, behavior) {
+function createIntel(context, event, behavior) {
   var pkg = {
     x: event.pageX || null,
     y: event.pageY || null,
     offsetX: event.offsetX,
     offsetY: event.offsetY,
-    scrollX: window.scrollX,
-    scrollY: window.scrollY,
+    scrollX: context.scrollX,
+    scrollY: context.scrollY,
     target: event.target.getAttribute ? event.target.getAttribute('id') : null,
     behavior: behavior,
     ts: Date.now()
@@ -43,6 +35,12 @@ function createIntel(event, behavior) {
 
 function data() {
   return box;
+}
+
+function tick() {
+  isRecording || bindListeners();
+  isRecording = true;
+  frame = window.requestAnimationFrame(tick);
 }
 
 // TODO: Need a lot of enhancement, like selector and sync layout and setTimeout
@@ -73,10 +71,35 @@ function play(cursor, box) {
   });
 }
 
+function mostClicked(data) {
+  return getMaxKey(allClicked(data));
+}
+function allClicked(data) {
+  return data.filter(function (pkg) {
+    return pkg.behavior === 'click';
+  }).reduce(function (result, pkg) {
+    if (!result[pkg.target]) result[pkg.target] = 0;
+    ++result[pkg.target];
+    return result;
+  }, {});
+}
+function getMaxKey(obj) {
+  var max = 0;
+  var maxKey;
+  Object.keys(obj).forEach(function (idx) {
+    if (max < obj[idx]) {
+      max = obj[idx];
+      maxKey = idx;
+    }
+  });
+  return maxKey;
+}
+
 tick();
 document.querySelector('#play').addEventListener('click', function (e) {
   var d = data();
   play(document.querySelector('#cursor'), d);
+  console.log(mostClicked(d));
 });
 document.getElementById('test').addEventListener('click', function () {
   console.log('success');
