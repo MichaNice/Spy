@@ -1,17 +1,16 @@
 var isRecording = false
 var frame = undefined
 var box = []
-bindListeners()
 
 // TODO: debounce
-function bindListeners() {
-  window.addEventListener('mousemove', e => box.push(createIntel(window, e, 'mousemove')), true)
-  window.addEventListener('click', e => box.push(createIntel(window, e, 'click')), true)
-  window.addEventListener('scroll', e => box.push(createIntel(window, e, 'scroll')), true)
+function bindListeners(context) {
+  context.addEventListener('mousemove', e => box.push(pkg(context, e, 'mousemove')), true)
+  context.addEventListener('click', e => box.push(pkg(context, e, 'click')), true)
+  context.addEventListener('scroll', e => box.push(pkg(context, e, 'scroll')), true)
 }
 
-function createIntel(context, event, behavior) {
-  var pkg = {
+function pkg(context, event, behavior) {
+  return {
     x: event.pageX || null,
     y: event.pageY || null,
     offsetX: event.offsetX,
@@ -22,15 +21,14 @@ function createIntel(context, event, behavior) {
     behavior: behavior,
     ts: Date.now()
   }
-  return pkg
 }
 
 export function data() {
   return box
 }
 
-export function tick() {
-  isRecording || bindListeners()
+export function tick(context) {
+  isRecording || bindListeners(context)
   isRecording = true
-  frame = window.requestAnimationFrame(tick)
+  frame = requestAnimationFrame(tick)
 }

@@ -25,3 +25,6 @@ export function play(cursor, box) {
     }, pkg.ts - start);
   })
 }
+function click() {}
+function scroll() {}
+function mousemove() {}

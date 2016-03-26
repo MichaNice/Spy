@@ -1,6 +1,3 @@
-function analysis(data, filter) {
-
-}
 function mostClicked(data) {
   return getMaxKey(allClicked(data))
 }

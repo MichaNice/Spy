@@ -3,7 +3,7 @@ import { play } from './play'
 import { mostClicked } from './analysis.js'
 var pos
 var preData
-tick();
+tick(window)
 document.querySelector('#play').addEventListener('click', function(e) {
   var d = data()
   play(document.querySelector('#cursor'), d)
@@ -11,5 +11,5 @@ document.querySelector('#play').addEventListener('click', function(e) {
 })
 document.getElementById('test').addEventListener('click', function() {
   console.log('success')
-});
+})
 

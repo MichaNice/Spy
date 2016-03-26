@@ -3,23 +3,22 @@
 var isRecording = false;
 var frame = undefined;
 var box = [];
-bindListeners();
 
 // TODO: debounce
-function bindListeners() {
-  window.addEventListener('mousemove', function (e) {
-    return box.push(createIntel(window, e, 'mousemove'));
+function bindListeners(context) {
+  context.addEventListener('mousemove', function (e) {
+    return box.push(pkg(context, e, 'mousemove'));
   }, true);
-  window.addEventListener('click', function (e) {
-    return box.push(createIntel(window, e, 'click'));
+  context.addEventListener('click', function (e) {
+    return box.push(pkg(context, e, 'click'));
   }, true);
-  window.addEventListener('scroll', function (e) {
-    return box.push(createIntel(window, e, 'scroll'));
+  context.addEventListener('scroll', function (e) {
+    return box.push(pkg(context, e, 'scroll'));
   }, true);
 }
 
-function createIntel(context, event, behavior) {
-  var pkg = {
+function pkg(context, event, behavior) {
+  return {
     x: event.pageX || null,
     y: event.pageY || null,
     offsetX: event.offsetX,
@@ -30,17 +29,16 @@ function createIntel(context, event, behavior) {
     behavior: behavior,
     ts: Date.now()
   };
-  return pkg;
 }
 
 function data() {
   return box;
 }
 
-function tick() {
-  isRecording || bindListeners();
+function tick(context) {
+  isRecording || bindListeners(context);
   isRecording = true;
-  frame = window.requestAnimationFrame(tick);
+  frame = requestAnimationFrame(tick);
 }
 
 // TODO: Need a lot of enhancement, like selector and sync layout and setTimeout
@@ -95,7 +93,7 @@ function getMaxKey(obj) {
   return maxKey;
 }
 
-tick();
+tick(window);
 document.querySelector('#play').addEventListener('click', function (e) {
   var d = data();
   play(document.querySelector('#cursor'), d);
