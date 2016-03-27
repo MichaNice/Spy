@@ -13,10 +13,10 @@ function pkg(context, event, behavior) {
   return {
     x: event.pageX || null,
     y: event.pageY || null,
-    offsetX: event.offsetX,
-    offsetY: event.offsetY,
-    scrollX: context.scrollX,
-    scrollY: context.scrollY,
+    offsetX: event.offsetX || null,
+    offsetY: event.offsetY || null,
+    scrollX: context.scrollX || null,
+    scrollY: context.scrollY || null,
     target: event.target.getAttribute ? event.target.getAttribute('id') : null,
     behavior: behavior,
     ts: Date.now()
@@ -27,7 +27,7 @@ export function data() {
   return box
 }
 
-export function tick(context) {
+export function tick(context = window) {
   isRecording || bindListeners(context)
   isRecording = true
   frame = requestAnimationFrame(tick)

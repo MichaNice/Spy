@@ -27,6 +27,7 @@ function compile() {
                 this.emit('end');
             }
         }))
+        .pipe(babel())
         .pipe(rollup({
             sourceMap: true,
             plugins: [ 
@@ -34,7 +35,6 @@ function compile() {
                 commonjs()
             ]
         }))
-        .pipe(babel())
         .on('error', util.log)
         .pipe(rename('build.js'))
         .pipe(sourcemaps.write('.'))

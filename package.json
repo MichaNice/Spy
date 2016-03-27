@@ -1,7 +1,9 @@
 {
   "name": "spy",
   "version": "0.1.0",
-  "dependencies": {},
+  "dependencies": {
+    "firebase": "^2.4.1"
+  },
   "devDependencies": {
     "ava": "^0.12.0",
     "babel-plugin-external-helpers": "^6.5.0",

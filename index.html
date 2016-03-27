@@ -11,8 +11,15 @@
     position: relative;
     z-index: 5;
   }
-  #cursor {
+  .cursor {
     position: absolute;
+    left: 480px;
+    top: 330px;
+    width: 20px;
+    height: 20px;
+    background: #777;
+    border-radius: 50%;
+    opacity: 0.5;
   }
   #test {
     width: 100px;
@@ -22,11 +29,43 @@
 </head>
 
 <body>
-  <div id="cursor">x</div>
-  <button id='play'>play</button>
-  <button id='test'>hello</button>
-  <button id='haha'>world</button>
+  <head>
+    <h1>Spy.js</h1>
+    <h2>Modern user bahavior analysis tool</h2>
+    <p>Spy.js is modern, open-source tool to analysis users in single page applications.</p>
+  </head>
+  <main>
+    <h2>Why Spy?</h2>
+    <p>Unlike others analysis tool (such as Google Analysis, Inspectlet), you can save the user data in your own data storage.</p>
+    <p>Spy is lighweight but powerful, can be customized based you needs.</p>
+    <h2>Installation</h2>
+    <code>npm install --save spy.js</code>
+    <h2>How to use?</h2>
+    <p>Run <code>spy.start()</code> to start spy.</p>
+    <p>Run <code>spy.upload(name, interval)</code> to upload to default firebase cloud.</p>
+    <p>Run <code>spy.show(name)</code> to display all records.</p>
+    <div><a id='demo' href='#'><h2>Show me some demo</h2></a></div>
+    <div><a id='demo2' href='#'><h2>How about another demo?</h2></a></div>
+    <h2>API</h2>
+    <p><code>spy.start()</code></p>
+    <p><code>spy.upload()</code></p>
+    <p><code>spy.show()</code></p>
+    <p><code>spy.current()</code></p>
+    <p><code>spy.analysis()</code></p>
+  </main>
   <script type="text/javascript" src="build/build.js"></script>
+  <script type="text/javascript">
+    spy.start()
+    spy.upload('demo-site')
+    document.querySelector('#demo').addEventListener('click', function(e) {
+      this.textContent = 'Now playing your mouse behavior since entering this site :>'
+      spy.current()
+    });
+    document.querySelector('#demo2').addEventListener('click', function(e) {
+      this.textContent = 'Now playing all user behavior since entering this site :o'
+      spy.show('demo-site')
+    });
+  </script>
 </body>
 
 </html>

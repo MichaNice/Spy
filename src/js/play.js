@@ -1,7 +1,9 @@
 // TODO: Need a lot of enhancement, like selector and sync layout and setTimeout
-export function play(cursor, box) {
-  let start = box[0].ts;
-  box.forEach(pkg => {
+export function play(cursor, data, scroll) {
+  let start = data[0].ts;
+  data
+  .filter(pkg => scroll || pkg.behavior !== 'scroll')
+  .forEach(pkg => {
     setTimeout(() => {
       if (pkg.behavior === 'scroll') {
         window.scroll(pkg.scrollX, pkg.scrollY);
@@ -19,7 +21,7 @@ export function play(cursor, box) {
         if (pkg.target) {
           var evObj = document.createEvent('Events');
           evObj.initEvent('click', true, false);
-          document.getElementById(pkg.target).dispatchEvent(evObj);
+          // document.getElementById(pkg.target).dispatchEvent(evObj);
         }
       }
     }, pkg.ts - start);
