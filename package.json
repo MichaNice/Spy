@@ -1,5 +1,5 @@
 {
-  "name": "spy",
+  "name": "spy.js",
   "version": "0.1.0",
   "dependencies": {
     "firebase": "^2.4.1"
