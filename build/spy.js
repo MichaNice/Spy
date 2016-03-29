@@ -20,9 +20,22 @@ function pkg(context, event, behavior) {
     scrollX: context.scrollX || null,
     scrollY: context.scrollY || null,
     target: event.target.getAttribute ? event.target.getAttribute('id') : null,
+    map: findDomPosition(event.target),
     behavior: behavior,
     ts: Date.now()
   }
+}
+
+function findDomPosition(dom) {
+  var result = []
+  if (dom.parentNode) {
+    Array.from(dom.parentNode.childNodes).forEach((node, idx) => {
+      if (dom.isEqualNode(node)) {
+        result = result.concat(idx, findDomPosition(dom.parentNode))
+      }
+    })
+  }
+  return result
 }
 
 function data() {
@@ -35,9 +48,15 @@ function tick(context = window) {
   frame = requestAnimationFrame(tick)
 }
 
-// TODO: Need a lot of enhancement, like selector and sync layout and setTimeout
-function play(cursor, data, scroll) {
-  let start = data[0].ts;
+// TODO: Need a lot of enhancement, like selector and sync layout forcing and setTimeout
+var colors = ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#3498db', '#34495e', '#9b59b6']
+function play(data, options) {
+  options = Object.assign({
+    cursor: defaultCursor(),
+    scroll: false
+  }, options)
+  let [{ts: start}] = data
+  let {cursor, scroll} = options
   data
   .filter(pkg => scroll || pkg.behavior !== 'scroll')
   .forEach(pkg => {
@@ -45,24 +64,49 @@ function play(cursor, data, scroll) {
       if (pkg.behavior === 'scroll') {
         window.scroll(pkg.scrollX, pkg.scrollY);
       } else if (pkg.behavior === 'mousemove') {
-        if (pkg.target && document.getElementById(pkg.target)) {
-          cursor.style.left = document.getElementById(pkg.target).pageX + pkg.offsetX;
-          cursor.style.top = document.getElementById(pkg.target).pageY + pkg.offsetY;
-        } else {
-          cursor.style.left = pkg.x + 'px';
-          cursor.style.top = pkg.y + 'px';
-        }
-        cursor.style.left = pkg.x + 'px';
-        cursor.style.top = pkg.y + 'px';
+        var ref = parseMap(pkg.map)
+        // the ref may be a text node
+        if (!ref.getBoundingClientRect)
+          ref = ref.parentNode
+          var offset = getOffset(ref)
+          cursor.style.left = offset.left + pkg.offsetX + 'px';
+          cursor.style.top = offset.top + pkg.offsetY + 'px';
       } else if (pkg.behavior === 'click') {
         if (pkg.target) {
-          var evObj = document.createEvent('Events');
-          evObj.initEvent('click', true, false);
-          // document.getElementById(pkg.target).dispatchEvent(evObj);
+          let event = document.createEvent('Events');
+          event.initEvent('click', true, false);
+          if (document.getElementById(pkg.target))
+            document.getElementById(pkg.target).dispatchEvent(event);
         }
       }
     }, pkg.ts - start);
   })
+}
+function getOffset(el) {
+  el = el.getBoundingClientRect();
+  return {
+    left: el.left + window.scrollX,
+    top: el.top + window.scrollY
+  }
+}
+function parseMap(map) {
+  return map
+  .reverse()
+  .reduce((result, info) => {
+    if (result.childNodes[info])
+      return result.childNodes[info]
+    return result
+  }, document)
+}
+function defaultCursor() {
+  let cursor = document.createElement('div')
+  cursor.style.position = 'absolute'
+  cursor.style.width = '20px'
+  cursor.style.height = '20px'
+  cursor.style.background = colors[Math.floor(Math.random() * colors.length)]
+  cursor.style['border-radius'] = '50%'
+  document.body.appendChild(cursor)
+  return cursor
 }
 
 var all = type => data => {
@@ -76,15 +120,18 @@ var all = type => data => {
 }
 
 var getMaxKey = function(obj) {
-  var max = 0
-  var maxKey
+  let max = 0
+  let maxKey
   Object.keys(obj).forEach(idx => {
     if (max < obj[idx]) {
       max = obj[idx]
       maxKey = idx
     }
   })
-  return maxKey
+  return {
+    target: maxKey,
+    times: max
+  }
 }
 
 var compose = (f, g) => x => f(g(x))
@@ -379,13 +426,13 @@ var len = 0
 var pos$1
 var firebase = new Firebase$1('https://blog-new.firebaseio.com/name/')
 function toFirebase(data, app = 'test') {
-  var dir = firebase.child(app)
+  let dir = firebase.child(app)
   if (!data.length || len === data.length)
     return
   if (!pos$1)
     pos$1 = dir.push({data: data})
   else
-   pos$1.set({data: data})
+    pos$1.set({data: data})
   len = data.length
 }
 function fromFirebase(app = 'test') {
@@ -396,32 +443,43 @@ function fromFirebase(app = 'test') {
 
 var spy = {}
 
+// public API
 spy.start = tick
 spy.upload = function(name, interval = 3000) {
   setInterval(() => toFirebase(data(), name), interval)
 }
-spy.show = function(name) {
-  // var d = data()
-  // play(document.querySelector('#cursor'), d)
+spy.show = function(name, options) {
   fromFirebase(name).then(records => {
     Object.keys(records)
     .map(idx => records[idx])
     .map(record => record.data)
     .forEach(data => {
-      play(cursor(), data, false)
-      console.log(`${mostClicked(data)}, ${mostHover(data)}`)
-      console.log(all('click')(data))
+      play(data, options)
     })
   })
 }
-spy.current = function() {
-  play(cursor(), data(), true)
+spy.current = function(options) {
+  play(data(), options)
 }
-function cursor() {
-  var cursor = document.createElement('div')
-  cursor.classList.add('cursor')
-  document.body.appendChild(cursor)
-  return cursor
+spy.export = function(name, callback) {
+  fromFirebase(name).then(callback)
+}
+spy.analysis = function(name, callback) {
+  fromFirebase(name).then(records => {
+    var users = Object.keys(records)
+      .map(idx => records[idx])
+      .map(record => record.data)
+      
+    var data = users.reduce((result, data) => result.concat(data), [])
+    var clicked = all('click')(data)
+    var clicks = mostClicked(data)
+
+    callback({
+      totalUsers: users.length,
+      totalClicks: data.length,
+      mostClicked: clicks
+    })
+  })
 }
 window.spy = spy
-//# sourceMappingURL=build.js.map
+//# sourceMappingURL=spy.js.map

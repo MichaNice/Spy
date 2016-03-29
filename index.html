@@ -4,14 +4,14 @@
 <head>
   <title></title>
   <style type="text/css">
+  body {
+  }
   #export {
     position: relative;
     z-index: 5;
   }
   .cursor {
     position: absolute;
-    left: 480px;
-    top: 330px;
     width: 20px;
     height: 20px;
     background: #777;
@@ -22,46 +22,112 @@
     width: 100px;
     height: 100px;
   }
+  #demo1,
+  #demo2 {
+    color: #e74c3c;
+    cursor: pointer;
+  }
+  .alert {
+    display: none;
+    position: fixed;
+    top: 300px;
+  }
+  .reverse {
+    background: #000;
+    color: #fff;
+  }
+
+  .section {
+    position: relative;
+    margin: 0 auto;
+    width: 500px;
+  }
+  .center {
+    text-align: center;
+  }
+  .right {
+    text-align: right;
+  }
+  .p-10 {
+    padding: 10px;
+  }
+  .p-5 {
+    padding: 5px;
+  }
   </style>
 </head>
 
 <body>
-  <head>
-    <h1>Spy.js</h1>
-    <h2>Modern user bahavior analysis tool</h2>
-    <p>Spy.js is modern, open-source tool to analysis users in single page applications.</p>
-  </head>
-  <main>
+  <header class='section'>
+    <h1 class='reverse p-10'>Spy.js</h1>
+    <q>Every man is surrounded by a neighborhood of voluntary spies.</q>
+    <div class='right'>- Jane Austen</div>
+    <p>Spy.js is a modern, open-source tool to analysis users behavior for web applications.</p>
+  </header>
+  <main class='section'>
     <h2>Why Spy?</h2>
-    <p>Unlike others analysis tool (such as Google Analysis, Inspectlet), you can save the user data in your own data storage.</p>
-    <p>Spy is lighweight but powerful, can be customized based you needs.</p>
+    <p>Spy is a lighweight but powerful tool, can be setup in just 30 seconds and you can immediately see the result. Ever be curious about how users browse your site? Just add one line of code and you can enjoy the happiness of better understanding visitors of your site!</p>
+    <p>Unlike others analysis tool (such as Google Analysis, Inspectlet), you can save the user data in your own data storage. Private data should keep secret.</p>
     <h2>Installation</h2>
     <code>npm install --save spy.js</code>
     <h2>How to use?</h2>
-    <p>Run <code>spy.start()</code> to start spy.</p>
-    <p>Run <code>spy.upload(name, interval)</code> to upload to default firebase cloud.</p>
-    <p>Run <code>spy.show(name)</code> to display all records.</p>
-    <div><a id='demo' href='#'><h2>Show me some demo</h2></a></div>
-    <div><a id='demo2' href='#'><h2>How about another demo?</h2></a></div>
+    Put the code into your application, spy the users:
+    <code>
+      <pre>
+        spy.start()
+        spy.upload('my-site-name')
+      </pre>
+    </code>
+    Then behavior data will be uploaded and save to cloud storage automatically.
+    When you want to see the result:
+    <code>
+      <pre>
+        spy.show('my-site-name')
+      </pre>
+    </code>
+    <div id='demo1'><h3>Show me some demo</h3></div>
+    <div id='demo1-alert' class='alert reverse p-10'>Now playing your behavior since entering this site (Sorry for spying you :< ).</div>
+    <div id='demo2'><h3>How about another demo?</h3></div>
+    <div id='demo2-alert' class='alert reverse p-10'>Now playing behavior of all vistors in this site. (Wait a moment for fetching data)</div>
     <h2>API</h2>
-    <p><code>spy.start()</code></p>
-    <p><code>spy.upload()</code></p>
-    <p><code>spy.show()</code></p>
-    <p><code>spy.current()</code></p>
-    <p><code>spy.analysis()</code></p>
+    <h3><code>spy.start()</code></h3>
+    <h3><code>spy.upload(name, interval)</code></h3>
+    <p><code>name</code>-- The id represent your site, must be unique and private.</p>
+    <p><code>interval</code>-- The upload interval, default is 3 seconds.</p>
+    <h3><code>spy.show(name, options)</code></h3>
+    <p><code>name</code>-- The id represent your site, must be unique and private.</p>
+    <p><code>options: { scroll: true/false, cursor: dom }</code></p>
+    <h3><code>spy.current(options)</code></h3>
+    <p>Display the current behavior</p>
+    <p><code>options: { scroll: true/false, cursor: dom }</code></p>
+    <h3><code>spy.export(name, callback)</code></h3>
+    <p><code>name</code>-- The id represent your site, must be unique and private.</p>
+    <p><code>callback</code>-- The first param of the callback will be the data you want.</p>
+    <h3 class='reverse p-5'>Enjoy being a spy!</h3>
   </main>
-  <script type="text/javascript" src="build/build.js"></script>
+  <script type="text/javascript" src="build/spy.js"></script>
   <script type="text/javascript">
     spy.start()
-    spy.upload('demo-site')
-    document.querySelector('#demo').addEventListener('click', function(e) {
-      this.textContent = 'Now playing your mouse behavior since entering this site :>'
-      spy.current()
-    });
-    document.querySelector('#demo2').addEventListener('click', function(e) {
-      this.textContent = 'Now playing all user behavior since entering this site :o'
-      spy.show('demo-site')
-    });
+    // spy.upload('demo-site')
+    document.querySelector('#demo1').addEventListener('click', function handler(e) {
+      // this.parentNode.removeChild(this)
+      this.textContent = 'Now playing your mouse behavior since entering this site (Sorry for spying you :<)'
+      document.querySelector('#demo1-alert').style.display = 'block'
+      document.querySelector('#demo2-alert').style.display = 'none'
+      spy.current({
+        scroll: true
+      })
+    })
+    document.querySelector('#demo2').addEventListener('click', function handler(e) {
+      // this.parentNode.removeChild(this)
+      document.querySelector('#demo1-alert').style.display = 'none'
+      document.querySelector('#demo2-alert').style.display = 'block'
+      spy.show('demo-site', {
+        scroll: false
+      })
+      // spy.export('demo-site', function(data) {console.log(data)})
+      spy.analysis('demo-site', console.log)
+    })
   </script>
 </body>
 

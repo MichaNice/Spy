@@ -9,15 +9,18 @@ var all = type => data => {
 }
 
 var getMaxKey = function(obj) {
-  var max = 0
-  var maxKey
+  let max = 0
+  let maxKey
   Object.keys(obj).forEach(idx => {
     if (max < obj[idx]) {
       max = obj[idx]
       maxKey = idx
     }
   })
-  return maxKey
+  return {
+    target: maxKey,
+    times: max
+  }
 }
 
 var compose = (f, g) => x => f(g(x))

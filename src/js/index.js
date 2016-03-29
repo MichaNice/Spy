@@ -6,31 +6,42 @@ var pos
 var preData
 var spy = {}
 
+// public API
 spy.start = tick
 spy.upload = function(name, interval = 3000) {
   setInterval(() => toFirebase(data(), name), interval)
 }
-spy.show = function(name) {
-  // var d = data()
-  // play(document.querySelector('#cursor'), d)
+spy.show = function(name, options) {
   fromFirebase(name).then(records => {
     Object.keys(records)
     .map(idx => records[idx])
     .map(record => record.data)
     .forEach(data => {
-      play(cursor(), data, false)
-      console.log(`${mostClicked(data)}, ${mostHover(data)}`)
-      console.log(all('click')(data))
+      play(data, options)
     })
   })
 }
-spy.current = function() {
-  play(cursor(), data(), true)
+spy.current = function(options) {
+  play(data(), options)
 }
-function cursor() {
-  var cursor = document.createElement('div')
-  cursor.classList.add('cursor')
-  document.body.appendChild(cursor)
-  return cursor
+spy.export = function(name, callback) {
+  fromFirebase(name).then(callback)
+}
+spy.analysis = function(name, callback) {
+  fromFirebase(name).then(records => {
+    var users = Object.keys(records)
+      .map(idx => records[idx])
+      .map(record => record.data)
+      
+    var data = users.reduce((result, data) => result.concat(data), [])
+    var clicked = all('click')(data)
+    var clicks = mostClicked(data)
+
+    callback({
+      totalUsers: users.length,
+      totalClicks: data.length,
+      mostClicked: clicks
+    })
+  })
 }
 window.spy = spy

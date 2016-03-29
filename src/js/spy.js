@@ -18,9 +18,22 @@ function pkg(context, event, behavior) {
     scrollX: context.scrollX || null,
     scrollY: context.scrollY || null,
     target: event.target.getAttribute ? event.target.getAttribute('id') : null,
+    map: findDomPosition(event.target),
     behavior: behavior,
     ts: Date.now()
   }
+}
+
+function findDomPosition(dom) {
+  var result = []
+  if (dom.parentNode) {
+    Array.from(dom.parentNode.childNodes).forEach((node, idx) => {
+      if (dom.isEqualNode(node)) {
+        result = result.concat(idx, findDomPosition(dom.parentNode))
+      }
+    })
+  }
+  return result
 }
 
 export function data() {

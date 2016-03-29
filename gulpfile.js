@@ -36,7 +36,7 @@ function compile() {
             ]
         }))
         .on('error', util.log)
-        .pipe(rename('build.js'))
+        .pipe(rename('spy.js'))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./build'));
 }
