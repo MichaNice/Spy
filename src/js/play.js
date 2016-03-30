@@ -20,9 +20,9 @@ export function play(data, options) {
           ref = ref.parentNode
         if (!ref.getBoundingClientRect)
           return
-          var offset = getOffset(ref)
-          cursor.style.left = offset.left + pkg.offsetX + 'px';
-          cursor.style.top = offset.top + pkg.offsetY + 'px';
+        var offset = getOffset(ref)
+        cursor.style.left = offset.left + pkg.offsetX + 'px';
+        cursor.style.top = offset.top + pkg.offsetY + 'px';
       } else if (pkg.behavior === 'click') {
         if (pkg.target) {
           let event = document.createEvent('Events');

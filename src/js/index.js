@@ -32,8 +32,8 @@ spy.analysis = function(name, callback) {
   return fromFirebase(name).then(records => {
     var users = Object.keys(records)
       .map(idx => records[idx])
-      .map(record => record.data)
-      
+      .map(record => record.data);
+
     var data = users.reduce((result, data) => result.concat(data), [])
     var clicked = all('click')(data)
     var clicks = mostClicked(data)
