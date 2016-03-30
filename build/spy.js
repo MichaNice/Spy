@@ -68,6 +68,8 @@ function play(data, options) {
         // the ref may be a text node
         if (!ref.getBoundingClientRect)
           ref = ref.parentNode
+        if (!ref.getBoundingClientRect)
+          return
           var offset = getOffset(ref)
           cursor.style.left = offset.left + pkg.offsetX + 'px';
           cursor.style.top = offset.top + pkg.offsetY + 'px';
@@ -424,7 +426,7 @@ var Firebase$1 = (firebaseWeb && typeof firebaseWeb === 'object' && 'default' in
 
 var len = 0
 var pos$1
-var firebase = new Firebase$1('https://blog-new.firebaseio.com/name/')
+var firebase = new Firebase$1('https://spy-js.firebaseio.com/name/')
 function toFirebase(data, app = 'test') {
   let dir = firebase.child(app)
   if (!data.length || len === data.length)
@@ -461,8 +463,10 @@ spy.show = function(name, options) {
 spy.current = function(options) {
   play(data(), options)
 }
-spy.export = function(name, callback) {
+spy.export = data
+spy.download = function(name, callback) {
   fromFirebase(name).then(callback)
+  return 'the action is async, please read the data from the callback function'
 }
 spy.analysis = function(name, callback) {
   fromFirebase(name).then(records => {
@@ -473,12 +477,16 @@ spy.analysis = function(name, callback) {
     var data = users.reduce((result, data) => result.concat(data), [])
     var clicked = all('click')(data)
     var clicks = mostClicked(data)
+    if (callback && typeof callback === 'function') {
+      console.log(callback);
+      callback({
+        totalUsers: users.length,
+        totalClicks: data.length,
+        mostClicked: clicks
+      })
+    }
 
-    callback({
-      totalUsers: users.length,
-      totalClicks: data.length,
-      mostClicked: clicks
-    })
+    return 'the action is async, please read the infomation from the callback function'
   })
 }
 window.spy = spy

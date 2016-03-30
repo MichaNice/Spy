@@ -24,11 +24,12 @@ spy.show = function(name, options) {
 spy.current = function(options) {
   play(data(), options)
 }
-spy.export = function(name, callback) {
-  fromFirebase(name).then(callback)
+spy.export = data
+spy.download = function(name, callback) {
+  return fromFirebase(name).then(callback)
 }
 spy.analysis = function(name, callback) {
-  fromFirebase(name).then(records => {
+  return fromFirebase(name).then(records => {
     var users = Object.keys(records)
       .map(idx => records[idx])
       .map(record => record.data)
@@ -36,12 +37,14 @@ spy.analysis = function(name, callback) {
     var data = users.reduce((result, data) => result.concat(data), [])
     var clicked = all('click')(data)
     var clicks = mostClicked(data)
-
-    callback({
-      totalUsers: users.length,
-      totalClicks: data.length,
-      mostClicked: clicks
-    })
+    if (callback && typeof callback === 'function') {
+      console.log(callback);
+      callback({
+        totalUsers: users.length,
+        totalClicks: data.length,
+        mostClicked: clicks
+      })
+    }
   })
 }
 window.spy = spy

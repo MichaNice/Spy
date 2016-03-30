@@ -3,8 +3,21 @@
 
 <head>
   <title></title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
   <style type="text/css">
   body {
+    font-family: 'Open Sans', sans-serif;
+  }
+  *::selection {
+    background-color: #000;
+    color: #fff;
+  }
+  p {
+    font-size: .9em;
+  }
+  code {
+    font-family: 'Inconsolata';
   }
   #export {
     position: relative;
@@ -24,7 +37,8 @@
   }
   #demo1,
   #demo2 {
-    color: #e74c3c;
+    /*color: #e74c3c;*/
+    color: #16a085;
     cursor: pointer;
   }
   .alert {
@@ -48,6 +62,13 @@
   .right {
     text-align: right;
   }
+  .shadow {
+    box-shadow: 3px 3px 6px -2px #333;
+  }
+  .content {
+    border-bottom: 1px solid #000;
+    padding-bottom: 10px;
+  }
   .p-10 {
     padding: 10px;
   }
@@ -60,55 +81,70 @@
 <body>
   <header class='section'>
     <h1 class='reverse p-10'>Spy.js</h1>
-    <q>Every man is surrounded by a neighborhood of voluntary spies.</q>
-    <div class='right'>- Jane Austen</div>
-    <p>Spy.js is a modern, open-source tool to analysis users behavior for web applications.</p>
+    <p>Spy.js is a modern, open-source tool to analysis users behavior for web applications. It can trace user's mouse and produce nice statistic data including clicks, scroll and other useful information.</p>
   </header>
   <main class='section'>
     <h2>Why Spy?</h2>
     <p>Spy is a lighweight but powerful tool, can be setup in just 30 seconds and you can immediately see the result. Ever be curious about how users browse your site? Just add one line of code and you can enjoy the happiness of better understanding visitors of your site!</p>
-    <p>Unlike others analysis tool (such as Google Analysis, Inspectlet), you can save the user data in your own data storage. Private data should keep secret.</p>
+    <p>Unlike other web analytics tools (such as Google Analysis, Inspectlet), you can save the user data in your own data storage. Private data should keep secret.</p>
     <h2>Installation</h2>
     <code>npm install --save spy.js</code>
     <h2>How to use?</h2>
     Put the code into your application, spy the users:
     <code>
       <pre>
-        spy.start()
-        spy.upload('my-site-name')
+spy.start()
+spy.upload('my-site-name')
       </pre>
     </code>
     Then behavior data will be uploaded and save to cloud storage automatically.
     When you want to see the result:
     <code>
       <pre>
-        spy.show('my-site-name')
+spy.show('my-site-name')
       </pre>
     </code>
     <div id='demo1'><h3>Show me some demo</h3></div>
-    <div id='demo1-alert' class='alert reverse p-10'>Now playing your behavior since entering this site (Sorry for spying you :< ).</div>
+    <div id='demo1-alert' class='alert reverse p-10 shadow'>Now playing your behavior since entering this site (Sorry for spying you :< ).</div>
     <div id='demo2'><h3>How about another demo?</h3></div>
-    <div id='demo2-alert' class='alert reverse p-10'>Now playing behavior of all vistors in this site. (Wait a moment for fetching data)</div>
+    <div id='demo2-alert' class='alert reverse p-10 shadow'>Now playing behavior of all vistors in this site. (Wait a moment for fetching data)</div>
     <h2>API</h2>
     <h3><code>spy.start()</code></h3>
-    <h3><code>spy.upload(name, interval)</code></h3>
-    <p><code>name</code>-- The id represent your site, must be unique and private.</p>
+    <p class='content'>Begin to spy, normally it will be called once after sites initialized. it is used to record the behavior of visitors. Notice that you should use <code>spy.upload(name, interval)</code> to upload the data. If you want to store the data in your private storage, can use <code>spy.export()</code> to export current record.</p>
+
+    <h3><code>spy.upload(id[, interval])</code></h3>
+    <p><code>id</code>-- The id represent your site, you can choose whatever you want, but must be unique and private.</p>
     <p><code>interval</code>-- The upload interval, default is 3 seconds.</p>
-    <h3><code>spy.show(name, options)</code></h3>
-    <p><code>name</code>-- The id represent your site, must be unique and private.</p>
+    <p class='content'>Upload current record to default cloud storage every certain period of time.</p>
+
+    <h3><code>spy.show(id[, options])</code></h3>
+    <p><code>id</code>-- The id represent your site, must be unique and private.</p>
     <p><code>options: { scroll: true/false, cursor: dom }</code></p>
-    <h3><code>spy.current(options)</code></h3>
-    <p>Display the current behavior</p>
+    <p class='content'>Fetch data from one site based on the id you provide, then display the data.</p>
+
+    <h3><code>spy.current([options])</code></h3>
     <p><code>options: { scroll: true/false, cursor: dom }</code></p>
-    <h3><code>spy.export(name, callback)</code></h3>
+    <p class='content'>Display the current visitor's behavior. It is useful to test and see your own behavior.</p>
+
+    <!-- <h3><code>spy.download(name, callback)</code></h3>
     <p><code>name</code>-- The id represent your site, must be unique and private.</p>
-    <p><code>callback</code>-- The first param of the callback will be the data you want.</p>
-    <h3 class='reverse p-5'>Enjoy being a spy!</h3>
+    <p><code>callback(data)</code>-- The first param of the callback will be the data you want.</p>
+    <p class='content'>Download the data from our cloud storage. The first param of callback function will be the data.</p>
+ -->
+    <h3><code>spy.export()</code></h3>
+    <p class='content'>Return data of current user bahavior.</p>
+    <h3><code>spy.analysis(id, callback)</code></h3>
+    <p><code>id</code>-- The id represent your site, must be unique and private.</p>
+    <p><code>callback(data)</code>-- The first param of the callback will be the data you want.</p>
+    <p class='content'>The first param of callback function will contain some information about targeted site, including total amount of visitors, total amount of clicks, most clicked item and how many times it is clicked.
+    A promise will be return, you can also use <code>.then</code> to chain the following action.</p>
+
+    <h3 class='reverse p-10'>Enjoy being a spy!</h3>
   </main>
   <script type="text/javascript" src="build/spy.js"></script>
   <script type="text/javascript">
     spy.start()
-    // spy.upload('demo-site')
+    spy.upload('demo-site')
     document.querySelector('#demo1').addEventListener('click', function handler(e) {
       // this.parentNode.removeChild(this)
       this.textContent = 'Now playing your mouse behavior since entering this site (Sorry for spying you :<)'
@@ -126,7 +162,7 @@
         scroll: false
       })
       // spy.export('demo-site', function(data) {console.log(data)})
-      spy.analysis('demo-site', console.log)
+      spy.analysis('demo-site', data => console.log(data))
     })
   </script>
 </body>

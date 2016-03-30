@@ -1,7 +1,7 @@
 import Firebase from 'firebase'
 var len = 0
 var pos
-var firebase = new Firebase('https://blog-new.firebaseio.com/name/')
+var firebase = new Firebase('https://spy-js.firebaseio.com/name/')
 function toFirebase(data, app = 'test') {
   let dir = firebase.child(app)
   if (!data.length || len === data.length)

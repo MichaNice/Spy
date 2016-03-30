@@ -18,6 +18,8 @@ export function play(data, options) {
         // the ref may be a text node
         if (!ref.getBoundingClientRect)
           ref = ref.parentNode
+        if (!ref.getBoundingClientRect)
+          return
           var offset = getOffset(ref)
           cursor.style.left = offset.left + pkg.offsetX + 'px';
           cursor.style.top = offset.top + pkg.offsetY + 'px';
