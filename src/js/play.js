@@ -12,7 +12,7 @@ export function play(data, options) {
   .forEach(pkg => {
     setTimeout(() => {
       if (pkg.behavior === 'scroll') {
-        window.scroll(pkg.scrollX, pkg.scrollY);
+        window.scroll(pkg.scrollX, pkg.scrollY)
       } else if (pkg.behavior === 'mousemove') {
         var ref = parseMap(pkg.map)
         // the ref may be a text node
@@ -21,21 +21,21 @@ export function play(data, options) {
         if (!ref.getBoundingClientRect)
           return
         var offset = getOffset(ref)
-        cursor.style.left = offset.left + pkg.offsetX + 'px';
-        cursor.style.top = offset.top + pkg.offsetY + 'px';
+        cursor.style.left = offset.left + pkg.offsetX + 'px'
+        cursor.style.top = offset.top + pkg.offsetY + 'px'
       } else if (pkg.behavior === 'click') {
         if (pkg.target) {
-          let event = document.createEvent('Events');
-          event.initEvent('click', true, false);
+          let event = document.createEvent('Events')
+          event.initEvent('click', true, false)
           if (document.getElementById(pkg.target))
-            document.getElementById(pkg.target).dispatchEvent(event);
+            document.getElementById(pkg.target).dispatchEvent(event)
         }
       }
-    }, pkg.ts - start);
+    }, pkg.ts - start)
   })
 }
 function getOffset(el) {
-  el = el.getBoundingClientRect();
+  el = el.getBoundingClientRect()
   return {
     left: el.left + window.scrollX,
     top: el.top + window.scrollY
@@ -57,6 +57,7 @@ function defaultCursor() {
   cursor.style.height = '20px'
   cursor.style.background = colors[Math.floor(Math.random() * colors.length)]
   cursor.style['border-radius'] = '50%'
+  cursor.classList.add('spy-cursor')
   document.body.appendChild(cursor)
   return cursor
 }

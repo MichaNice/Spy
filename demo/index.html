@@ -75,6 +75,14 @@
   .p-5 {
     padding: 5px;
   }
+  .spy-cursor:after {
+    content: 'Cursor';
+    position: absolute;
+    left: 23px;
+    background: #000;
+    color: #fff;
+    padding: 3px 4px;
+  }
   </style>
 </head>
 
@@ -137,27 +145,30 @@ spy.show('my-site-name')
     <p><code>id</code>-- The id represent your site, must be unique and private.</p>
     <p><code>callback(data)</code>-- The first param of the callback will be the data you want.</p>
     <p class='content'>The first param of callback function will contain some information about targeted site, including total amount of visitors, total amount of clicks, most clicked item and how many times it is clicked.
-    A promise will be return, you can also use <code>.then</code> to chain the following action.</p>
+    A <code>Promise</code> will be returned, you can also use <code>.then</code> to chain the following action.</p>
 
     <h3 class='reverse p-10'>Enjoy being a spy!</h3>
   </main>
-  <script type="text/javascript" src="build/spy.js"></script>
+  <script type="text/javascript" src="../build/spy.js"></script>
   <script type="text/javascript">
     spy.start()
     spy.upload('demo-site')
     document.querySelector('#demo1').addEventListener('click', function handler(e) {
       // this.parentNode.removeChild(this)
-      this.textContent = 'Now playing your mouse behavior since entering this site (Sorry for spying you :<)'
-      document.querySelector('#demo1-alert').style.display = 'block'
-      document.querySelector('#demo2-alert').style.display = 'none'
-      spy.current({
-        scroll: true
-      })
+      this.textContent = 'Ready to play your cursor behavior since entering this site.'
+      // document.querySelector('#demo1-alert').style.display = 'block'
+      // document.querySelector('#demo2-alert').style.display = 'none'
+      setTimeout(function() {
+        spy.current({
+          scroll: true
+        })
+      }, 1000)
     })
     document.querySelector('#demo2').addEventListener('click', function handler(e) {
       // this.parentNode.removeChild(this)
-      document.querySelector('#demo1-alert').style.display = 'none'
-      document.querySelector('#demo2-alert').style.display = 'block'
+      // document.querySelector('#demo1-alert').style.display = 'none'
+      // document.querySelector('#demo2-alert').style.display = 'block'
+      this.innerHTML = 'Fetch all data about visitors of this site...<img src="loading.gif">'
       spy.show('demo-site', {
         scroll: false
       })

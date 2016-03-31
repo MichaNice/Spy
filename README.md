@@ -1,4 +1,4 @@
-# [Spy](http://changbenny.github.io/Spy/)
+# [Spy](http://changbenny.github.io/Spy/demo)
 Spy is a modern, open-source JavaScript tool to analysis users behavior for web applications. It can trace user's mouse and produce nice statistic data including clicks, scroll and other useful information.
 
 ### Why Spy?
@@ -6,7 +6,7 @@ Spy is a lighweight but powerful tool, can be setup in just 30 seconds and you c
 
 Unlike other web analytics tools (such as Google Analysis, Inspectlet), you can save the user data in your own data storage. Private data should keep secret.
 
-[Demo](http://changbenny.github.io/Spy/)
+[Demo](http://changbenny.github.io/Spy/demo)
 
 ### Installation
 

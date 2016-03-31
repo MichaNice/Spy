@@ -62,7 +62,7 @@ function play(data, options) {
   .forEach(pkg => {
     setTimeout(() => {
       if (pkg.behavior === 'scroll') {
-        window.scroll(pkg.scrollX, pkg.scrollY);
+        window.scroll(pkg.scrollX, pkg.scrollY)
       } else if (pkg.behavior === 'mousemove') {
         var ref = parseMap(pkg.map)
         // the ref may be a text node
@@ -70,22 +70,22 @@ function play(data, options) {
           ref = ref.parentNode
         if (!ref.getBoundingClientRect)
           return
-          var offset = getOffset(ref)
-          cursor.style.left = offset.left + pkg.offsetX + 'px';
-          cursor.style.top = offset.top + pkg.offsetY + 'px';
+        var offset = getOffset(ref)
+        cursor.style.left = offset.left + pkg.offsetX + 'px'
+        cursor.style.top = offset.top + pkg.offsetY + 'px'
       } else if (pkg.behavior === 'click') {
         if (pkg.target) {
-          let event = document.createEvent('Events');
-          event.initEvent('click', true, false);
+          let event = document.createEvent('Events')
+          event.initEvent('click', true, false)
           if (document.getElementById(pkg.target))
-            document.getElementById(pkg.target).dispatchEvent(event);
+            document.getElementById(pkg.target).dispatchEvent(event)
         }
       }
-    }, pkg.ts - start);
+    }, pkg.ts - start)
   })
 }
 function getOffset(el) {
-  el = el.getBoundingClientRect();
+  el = el.getBoundingClientRect()
   return {
     left: el.left + window.scrollX,
     top: el.top + window.scrollY
@@ -107,6 +107,7 @@ function defaultCursor() {
   cursor.style.height = '20px'
   cursor.style.background = colors[Math.floor(Math.random() * colors.length)]
   cursor.style['border-radius'] = '50%'
+  cursor.classList.add('spy-cursor')
   document.body.appendChild(cursor)
   return cursor
 }
@@ -465,15 +466,14 @@ spy.current = function(options) {
 }
 spy.export = data
 spy.download = function(name, callback) {
-  fromFirebase(name).then(callback)
-  return 'the action is async, please read the data from the callback function'
+  return fromFirebase(name).then(callback)
 }
 spy.analysis = function(name, callback) {
-  fromFirebase(name).then(records => {
+  return fromFirebase(name).then(records => {
     var users = Object.keys(records)
       .map(idx => records[idx])
-      .map(record => record.data)
-      
+      .map(record => record.data);
+
     var data = users.reduce((result, data) => result.concat(data), [])
     var clicked = all('click')(data)
     var clicks = mostClicked(data)
@@ -485,8 +485,6 @@ spy.analysis = function(name, callback) {
         mostClicked: clicks
       })
     }
-
-    return 'the action is async, please read the infomation from the callback function'
   })
 }
 window.spy = spy
