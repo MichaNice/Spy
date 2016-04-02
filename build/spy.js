@@ -74,12 +74,12 @@ function play(data, options) {
         cursor.style.left = offset.left + pkg.offsetX + 'px'
         cursor.style.top = offset.top + pkg.offsetY + 'px'
       } else if (pkg.behavior === 'click') {
-        if (pkg.target) {
-          let event = document.createEvent('Events')
-          event.initEvent('click', true, false)
-          if (document.getElementById(pkg.target))
-            document.getElementById(pkg.target).dispatchEvent(event)
-        }
+        // if (pkg.target) {
+        //   let event = document.createEvent('Events')
+        //   event.initEvent('click', true, false)
+        //   if (document.getElementById(pkg.target))
+        //     document.getElementById(pkg.target).dispatchEvent(event)
+        // }
       }
     }, pkg.ts - start)
   })
@@ -443,6 +443,8 @@ function fromFirebase(app = 'test') {
     firebase.child(app).on('value', snapshot => resolve(snapshot.val()))
   })
 }
+firebase.remove();
+console.log('remove');
 
 var spy = {}
 
