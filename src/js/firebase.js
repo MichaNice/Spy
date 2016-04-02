@@ -17,6 +17,4 @@ function fromFirebase(app = 'test') {
     firebase.child(app).on('value', snapshot => resolve(snapshot.val()))
   })
 }
-firebase.remove();
-console.log('remove');
 export { toFirebase, fromFirebase };
