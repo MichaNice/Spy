@@ -29,21 +29,10 @@ When you want to see the result:
 spy.show('my-site-name')
 ```
 ### API
-#### spy.start()
-Begin to spy, normally it will be called once after sites initialized. it is used to record the behavior of visitors. Notice that you should use `spy.upload(name, interval)` to upload the data. If you want to store the data in your private storage, can use `spy.export()` to export current record.
-
-#### spy.upload(id[, interval])
-
-#### spy.show(id[, options])
-
-#### spy.current([options])
-
-#### spy.export()
-
-#### spy.analysis(id, callback)
+For the complete API and document, please see the [Spy](http://changbenny.github.io/Spy/demo) website.
 
 ### Contribute
-Any contribution is all welcome. For feature requests and bugs report, please open an issue or pull request.
+Contribution is welcome. For feature requests and bugs report, please open an issue or send apull request.
 
 #### Build
 ```sh
