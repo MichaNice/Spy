@@ -83,13 +83,21 @@
     color: #fff;
     padding: 3px 4px;
   }
+  .inline-block {
+    display: inline-block;
+  }
   </style>
 </head>
 
 <body>
   <header class='section'>
-    <h1 class='reverse p-10'>Spy.js</h1>
-    <p>Spy.js is a modern, open-source tool to analysis users behavior for web applications. It can trace user's mouse and produce nice statistic data including clicks, scroll and other useful information.</p>
+    <h1 class='reverse p-10'>Spy</h1>
+    <div class='right'>
+        <div class='inline-block'>
+            <a href='https://github.com/changbenny/Spy' class='right'>Github</a>
+        </div>
+    </div>
+    <p>Spy is a modern, open-source tool to analysis users behavior for web applications. It can trace user's mouse and produce nice statistic data including clicks, scroll and other useful information.</p>
   </header>
   <main class='section'>
     <h2>Why Spy?</h2>
@@ -105,7 +113,7 @@ spy.start()
 spy.upload('my-site-name')
       </pre>
     </code>
-    Then behavior data will be uploaded and save to cloud storage automatically.
+    Then behavior data will be uploaded and save automatically (in Firebase).
     When you want to see the result:
     <code>
       <pre>
@@ -123,7 +131,7 @@ spy.show('my-site-name')
     <h3><code>spy.upload(id[, interval])</code></h3>
     <p><code>id</code>-- The id represent your site, you can choose whatever you want, but must be unique and private.</p>
     <p><code>interval</code>-- The upload interval, default is 3 seconds.</p>
-    <p class='content'>Upload current record to default cloud storage every certain period of time.</p>
+    <p class='content'>Upload current record to default Firebase storage every certain period of time.</p>
 
     <h3><code>spy.show(id[, options])</code></h3>
     <p><code>id</code>-- The id represent your site, must be unique and private.</p>
@@ -146,6 +154,9 @@ spy.show('my-site-name')
     <p><code>callback(data)</code>-- The first param of the callback will be the data you want.</p>
     <p class='content'>The first param of callback function will contain some information about targeted site, including total amount of visitors, total amount of clicks, most clicked item and how many times it is clicked.
     A <code>Promise</code> will be returned, you can also use <code>.then</code> to chain the following action.</p>
+
+    <h2>Contribution</h2>
+    For any suggestions or contribution, please see the <a href='https://github.com/changbenny/Spy'>Github repo</a>.
 
     <h3 class='reverse p-10'>Enjoy being a spy!</h3>
   </main>

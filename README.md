@@ -22,7 +22,7 @@ spy.start()
 spy.upload('my-site-name')
 ```
 
-Then behavior data will be uploaded and save to cloud storage automatically.
+Then behavior data will be uploaded and save automatically (in Firebase).
 When you want to see the result:
 
 ```javascript
