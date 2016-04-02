@@ -14,6 +14,7 @@ spy.upload = function(name, interval = 3000) {
 spy.show = function(name, options) {
   fromFirebase(name).then(records => {
     Object.keys(records)
+    .filter((idx, count) => count < 50)
     .map(idx => records[idx])
     .map(record => record.data)
     .forEach(data => {
