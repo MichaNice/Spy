@@ -82,6 +82,7 @@
     background: #000;
     color: #fff;
     padding: 3px 4px;
+    /*transition: transform .1s;*/
   }
   .inline-block {
     display: inline-block;
@@ -163,7 +164,7 @@ spy.show('my-site-name')
   <script type="text/javascript" src="../build/spy.js"></script>
   <script type="text/javascript">
     spy.start()
-    spy.upload('demo-site')
+    // spy.upload('demo-site')
     document.querySelector('#demo1').addEventListener('click', function handler(e) {
       // this.parentNode.removeChild(this)
       this.textContent = 'Ready to play your cursor behavior since entering this site.'

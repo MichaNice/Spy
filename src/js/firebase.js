@@ -14,7 +14,7 @@ function toFirebase(data, app = 'test') {
 }
 function fromFirebase(app = 'test') {
   return new Promise((resolve, reject) => {
-    firebase.child(app).on('value', snapshot => resolve(snapshot.val()))
+    firebase.child(app).limitToLast(20).on('value', snapshot => resolve(snapshot.val()))
   })
 }
 export { toFirebase, fromFirebase };
