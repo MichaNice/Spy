@@ -80,9 +80,6 @@ function play(data, options) {
       if (!ref.getBoundingClientRect)
         return
       var offset = getOffset(ref)
-      // cursor.style.left = offset.left + pkg.offsetX + 'px'
-      // cursor.style.top = offset.top + pkg.offsetY + 'px'
-      console.log(`translate(${offset.left + pkg.offsetX}px, ${offset.top + pkg.offsetY}px)`);
       cursor.style.transform = `translate(${offset.left + pkg.offsetX}px, ${offset.top + pkg.offsetY}px)`
     }, pkg.ts - start)
   })
@@ -112,6 +109,7 @@ function defaultCursor() {
   cursor.style['border-radius'] = '50%'
   cursor.style.top = '0px';
   cursor.style.left = '0px';
+  cursor.style.transition = 'transform .1s ease-out';
 
   cursor.classList.add('spy-cursor')
   document.body.appendChild(cursor)

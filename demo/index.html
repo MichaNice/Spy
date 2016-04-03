@@ -82,7 +82,9 @@
     background: #000;
     color: #fff;
     padding: 3px 4px;
-    /*transition: transform .1s;*/
+  }
+  .spy-cursor {
+    transition: transform .1s;
   }
   .inline-block {
     display: inline-block;
@@ -172,7 +174,7 @@ spy.show('my-site-name')
       // document.querySelector('#demo2-alert').style.display = 'none'
       setTimeout(function() {
         spy.current({
-          scroll: true
+          scroll: false
         })
       }, 1000)
     })
